@@ -9,7 +9,7 @@ package lua
 #cgo CFLAGS: -Ilua
 #cgo llua LDFLAGS: -llua
 #cgo luaa LDFLAGS: -llua -lm -ldl
-#cgo linux,!llua,!luaa LDFLAGS: -llua5.2
+#cgo linux,!llua,!luaa LDFLAGS: -llua5.3
 #cgo darwin,!luaa LDFLAGS: -llua
 #cgo freebsd,!luaa LDFLAGS: -llua
 
