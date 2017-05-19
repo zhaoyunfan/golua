@@ -449,8 +449,8 @@ func (L *State) Register(name string, f LuaGoFunction) {
 // lua_remove
 func (L *State) Remove(index int) {
 	C.lua_rotate(L.s, C.int(index), -1)
-	//C.lua_pop(L, index)
-	C.lua_settop(L.s, C.int(-(index)-1))
+	//C.lua_pop(L, 1)
+	C.lua_settop(L.s, C.int(-2))
 }
 
 // lua_replace
