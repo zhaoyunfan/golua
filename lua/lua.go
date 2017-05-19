@@ -271,7 +271,7 @@ func (L *State) GetTable(index int) { C.lua_gettable(L.s, C.int(index)) }
 func (L *State) GetTop() int { return int(C.lua_gettop(L.s)) }
 
 // lua_insert
-func (L *State) Insert(index int) { C.lua_insert(L.s, C.int(index)) }
+func (L *State) Insert(index int) { C.lua_rotate(L.s, C.int(index), 1) }
 
 // Returns true if lua_type == LUA_TBOOLEAN
 func (L *State) IsBoolean(index int) bool {
@@ -427,7 +427,7 @@ func (L *State) RawGet(index int) {
 
 // lua_rawgeti
 func (L *State) RawGeti(index int, n int) {
-	C.lua_rawgeti(L.s, C.int(index), C.int(n))
+	C.lua_rawgeti(L.s, C.int(index), C.lua_Integer(n))
 }
 
 // lua_rawset
@@ -437,7 +437,7 @@ func (L *State) RawSet(index int) {
 
 // lua_rawseti
 func (L *State) RawSeti(index int, n int) {
-	C.lua_rawseti(L.s, C.int(index), C.int(n))
+	C.lua_rawseti(L.s, C.int(index), C.lua_Integer(n))
 }
 
 // Registers a Go function as a global variable
@@ -448,12 +448,16 @@ func (L *State) Register(name string, f LuaGoFunction) {
 
 // lua_remove
 func (L *State) Remove(index int) {
-	C.lua_remove(L.s, C.int(index))
+	C.lua_rotate(L.s, C.int(index), -1)
+	//C.lua_pop(L, index)
+	C.lua_settop(L.s, C.int(-(index)-1))
 }
 
 // lua_replace
 func (L *State) Replace(index int) {
-	C.lua_replace(L.s, C.int(index))
+	C.lua_copy(L.s, -1, C.int(index))
+	//C.lua_pop(L.s, 1)
+	C.lua_settop(L.s, -2)
 }
 
 // lua_resume
